@@ -18,6 +18,7 @@ import kotlin.coroutines.cancellation.CancellationException
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var edtValue: EditText
     private lateinit var spConvertions: Spinner
     private val supportedCalculationStrategies = arrayOf(
         CalculationStrategyHolder("Quilometros para centímetros", kilometerToCentimeters()),
@@ -39,11 +40,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun initUi() {
         spConvertions = findViewById(R.id.spConvertions)
+        edtValue = findViewById(R.id.edtValue)
     }
 
     private fun setAction() {
         val btnConvert: Button = findViewById(R.id.btnConvert)
-        val edtValue: EditText = findViewById(R.id.edtValue)
+
 
         btnConvert.setOnClickListener{
 
@@ -72,6 +74,19 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+
+        val btnClean : Button = findViewById(R.id.btnClean)
+        btnClean.setOnClickListener {
+            clean()
+        }
+
+    }
+
+    private fun clean() {
+        edtValue.setText("")
+        edtValue.error = null
+
+        spConvertions.setSelection(0)
     }
 
     private fun showResult(result: Double, label: String) {
