@@ -120,7 +120,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun setUi(value: Double, position: Int) {
 
-        edtValue.setText(value.toString())
+        if(value == 0.0) {
+            clean()
+        }else{
+            edtValue.setText(value.toString())
+        }
+
+
 
         val spAdapter = ArrayAdapter(this, R.layout.res_spinner_item, getSpinnerData())
         spAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item)
