@@ -3,6 +3,7 @@ package com.example.conversordemedidas
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -31,11 +32,28 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        var value = 0.0
+        var position = 0
+
+        savedInstanceState?.let{
+            value = it.getDouble("Value")
+            position= it.getInt("POSITION")
+        }
+
         initUi()
 
-        setUi()
+        setUi(value, position)
 
         setAction()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        super.onSaveInstanceState(outState, outPersistentState)
+        try{
+            outState.putDouble("VALUE", edtValue.text.toString().toDouble())
+        }catch(e : NumberFormatException){
+            outState.putInt("POSITION", spConvertions.selectedItemPosition)
+        }
     }
 
     private fun initUi() {
@@ -100,15 +118,18 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun setUi() {
+    private fun setUi(value: Double, position: Int) {
+
+        edtValue.setText(value.toString())
 
         val spAdapter = ArrayAdapter(this, R.layout.res_spinner_item, getSpinnerData())
         spAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item)
         spConvertions.adapter = spAdapter
+        spConvertions.setSelection(position)
     }
 
 
-    fun getSpinnerData(): MutableList<String> {
+    private fun getSpinnerData(): MutableList<String> {
         val spinnerData = mutableListOf<String>()
 
         supportedCalculationStrategies.forEach{
